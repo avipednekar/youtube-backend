@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | Futuristic Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary: #9147ff;
+            --secondary: #00a6ff;
+            --text: #ffffff;
+            --text-secondary: #aaaaaa;
+            --bg: #0e0e10;
+            --bg-secondary: #18181b;
+            --border: #2d2d35;
+            --hover: #26262c;
+            --card-bg: #1f1f23;
+            --error: #ff4d4d;
+            --success: #4dff88;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Changed from center to flex-start */
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .background {
+            position: fixed; /* Changed from absolute to fixed */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+            background: 
+                linear-gradient(135deg, var(--primary) 0%, transparent 50%),
+                linear-gradient(225deg, var(--secondary) 0%, transparent 50%);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Sign Up Card */
+        .signup-card {
+            background-color: var(--card-bg);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 900px;
+            display: flex;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+            position: relative;
+            margin: 40px 0; /* Added margin for better spacing */
+        }
+
+        .signup-card::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            z-index: -1;
+            border-radius: 18px;
+            opacity: 0.7;
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            0% { filter: blur(5px); opacity: 0.5; }
+            100% { filter: blur(8px); opacity: 0.8; }
+        }
+
+        /* Left Column - Cover & Avatar */
+        .signup-left {
+            flex: 1;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(145, 71, 255, 0.1), rgba(0, 166, 255, 0.1));
+            border-right: 1px solid var(--border);
+            min-height: 100%; /* Ensure full height */
+        }
+
+        .cover-upload {
+            width: 100%;
+            aspect-ratio: 16/9;
+            background-color: var(--bg-secondary);
+            border-radius: 8px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            border: 2px dashed var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .cover-upload:hover {
+            border-color: var(--primary);
+        }
+
+        .cover-upload i {
+            font-size: 40px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .cover-upload span {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .cover-upload input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .cover-preview {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .avatar-upload {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: var(--bg-secondary);
+            position: relative;
+            margin-top: -60px;
+            border: 2px dashed var(--border);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .avatar-upload:hover {
+            border-color: var(--primary);
+        }
+
+        .avatar-upload i {
+            font-size: 24px;
+            color: var(--text-secondary);
+            margin-bottom: 5px;
+        }
+
+        .avatar-upload span {
+            color: var(--text-secondary);
+            font-size: 12px;
+        }
+
+        .avatar-upload input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+
+        .avatar-preview {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            display: none;
+        }
+
+        /* Right Column - Form */
+        .signup-right {
+            flex: 1;
+            padding: 40px;
+            min-height: 100%; /* Ensure full height */
+        }
+
+        .signup-header {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .signup-header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .signup-header p {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(145, 71, 255, 0.2);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .toggle-password:hover {
+            color: var(--text);
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .password-strength {
+            display: flex;
+            gap: 5px;
+            margin-top: 8px;
+        }
+
+        .strength-bar {
+            height: 4px;
+            flex: 1;
+            background-color: var(--border);
+            border-radius: 2px;
+            transition: all 0.3s;
+        }
+
+        .strength-bar.active {
+            background-color: var(--success);
+        }
+
+        .strength-bar.medium {
+            background-color: #ffcc00;
+        }
+
+        .strength-bar.weak {
+            background-color: var(--error);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(145, 71, 255, 0.4);
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0) 45%,
+                rgba(255, 255, 255, 0.2) 48%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0.2) 52%,
+                rgba(255, 255, 255, 0) 55%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(30deg);
+            animation: shine 3s infinite linear;
+            opacity: 0;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(30deg); opacity: 0; }
+            20% { opacity: 0.5; }
+            100% { transform: translateX(100%) rotate(30deg); opacity: 0; }
+        }
+
+        .submit-btn:hover::before {
+            animation: shine 1.5s infinite linear;
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .login-link a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .signup-card {
+                flex-direction: column;
+            }
+
+            .signup-left {
+                border-right: none;
+                border-bottom: 1px solid var(--border);
+                padding: 20px;
+            }
+
+            .cover-upload {
+                aspect-ratio: 16/9;
+                margin-bottom: 20px;
+            }
+
+            .avatar-upload {
+                margin-top: -40px;
+                width: 80px;
+                height: 80px;
+            }
+
+            .signup-right {
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    
+    <div class="signup-card">
+        <!-- Left Column - Cover & Avatar -->
+        <div class="signup-left">
+            <div class="cover-upload">
+                <i class="fas fa-image"></i>
+                <span>Drag & drop or click to upload cover</span>
+                <input type="file" id="cover-upload" accept="image/*">
+                <img id="cover-preview" class="cover-preview" alt="Cover preview">
+            </div>
+            
+            <div class="avatar-upload">
+                <i class="fas fa-user"></i>
+                <span>Upload avatar</span>
+                <input type="file" id="avatar-upload" accept="image/*">
+                <img id="avatar-preview" class="avatar-preview" alt="Avatar preview">
+            </div>
+        </div>
+        
+        <!-- Right Column - Form -->
+        <div class="signup-right">
+            <div class="signup-header">
+                <h1>Create Your Account</h1>
+                <p>Join our futuristic community today</p>
+            </div>
+            
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="full-name">Full Name</label>
+                    <input type="text" id="full-name" class="form-control" placeholder="Enter your full name" required>
+                    <div class="error-message" id="name-error">Please enter your full name</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" class="form-control" placeholder="@username" required>
+                    <div class="error-message" id="username-error">Username must be at least 4 characters</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" class="form-control" placeholder="your@email.com" required>
+                    <div class="error-message" id="email-error">Please enter a valid email address</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" class="form-control" placeholder="Create a password" required>
+                        <i class="fas fa-eye toggle-password" id="toggle-password"></i>
+                    </div>
+                    <div class="password-strength">
+                        <div class="strength-bar" id="strength-1"></div>
+                        <div class="strength-bar" id="strength-2"></div>
+                        <div class="strength-bar" id="strength-3"></div>
+                        <div class="strength-bar" id="strength-4"></div>
+                    </div>
+                    <div class="error-message" id="password-error">Password must be at least 8 characters</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password</label>
+                    <input type="password" id="confirm-password" class="form-control" placeholder="Confirm your password">
+                    <div class="error-message" id="confirm-error">Passwords don't match</div>
+                </div>
+                
+                <button type="submit" class="submit-btn">Sign Up</button>
+                
+                <div class="login-link">
+                    Already have an account? <a href="#">Log in</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Image upload previews
+            const coverUpload = document.getElementById('cover-upload');
+            const coverPreview = document.getElementById('cover-preview');
+            const avatarUpload = document.getElementById('avatar-upload');
+            const avatarPreview = document.getElementById('avatar-preview');
+            
+            coverUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        coverPreview.src = event.target.result;
+                        coverPreview.style.display = 'block';
+                        document.querySelector('.cover-upload i').style.display = 'none';
+                        document.querySelector('.cover-upload span').style.display = 'none';
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            avatarUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        avatarPreview.src = event.target.result;
+                        avatarPreview.style.display = 'block';
+                        document.querySelector('.avatar-upload i').style.display = 'none';
+                        document.querySelector('.avatar-upload span').style.display = 'none';
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Toggle password visibility
+            const togglePassword = document.getElementById('toggle-password');
+            const password = document.getElementById('password');
+            
+            togglePassword.addEventListener('click', function() {
+                const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                password.setAttribute('type', type);
+                this.classList.toggle('fa-eye-slash');
+            });
+            
+            // Password strength indicator
+            password.addEventListener('input', function() {
+                const value = this.value;
+                const strengthBars = document.querySelectorAll('.strength-bar');
+                let strength = 0;
+                
+                // Reset all bars
+                strengthBars.forEach(bar => {
+                    bar.classList.remove('active', 'medium', 'weak');
+                });
+                
+                if (value.length > 0) {
+                    strength++;
+                    document.getElementById('strength-1').classList.add('active');
+                }
+                
+                if (value.length >= 6) {
+                    strength++;
+                    document.getElementById('strength-2').classList.add('active');
+                }
+                
+                if (value.length >= 8 && /[A-Z]/.test(value) && /[0-9]/.test(value)) {
+                    strength++;
+                    document.getElementById('strength-3').classList.add('active');
+                }
+                
+                if (value.length >= 10 && /[!@#$%^&*(),.?":{}|<>]/.test(value)) {
+                    strength++;
+                    document.getElementById('strength-4').classList.add('active');
+                }
+                
+                // Color coding
+                if (strength > 0) {
+                    if (strength <= 2) {
+                        document.getElementById('strength-1').classList.add('weak');
+                        document.getElementById('strength-2').classList.add('weak');
+                    } else if (strength === 3) {
+                        document.getElementById('strength-3').classList.add('medium');
+                    }
+                }
+            });
+            
+            // Form validation
+            const form = document.getElementById('signup-form');
+            const confirmPassword = document.getElementById('confirm-password');
+            
+            form.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                let isValid = true;
+                
+                // Validate full name
+                const fullName = document.getElementById('full-name');
+                if (fullName.value.trim() === '') {
+                    document.getElementById('name-error').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('name-error').style.display = 'none';
+                }
+                 
+                
+                // Validate email
+                const email = document.getElementById('email');
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email.value)) {
+                    document.getElementById('email-error').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('email-error').style.display = 'none';
+                }
+                
+                // Validate password
+                if (password.value.length < 8) {
+                    document.getElementById('password-error').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('password-error').style.display = 'none';
+                }
+                
+                // Validate password match
+                if (confirmPassword.value && password.value !== confirmPassword.value) {
+                    document.getElementById('confirm-error').style.display = 'block';
+                    isValid = false;
+                } else {
+                    document.getElementById('confirm-error').style.display = 'none';
+                }
+                
+                if (isValid) {
+        const formData = new FormData();
+        formData.append('fullName', document.getElementById('full-name').value);
+        formData.append('username', document.getElementById('username').value);
+        formData.append('email', document.getElementById('email').value);
+        formData.append('password', document.getElementById('password').value);
+        // formData.append('confirmPassword', document.getElementById('confirm-password').value);
+
+        // Files
+        const avatarFile = document.getElementById('avatar-upload').files[0];
+        const coverFile = document.getElementById('cover-upload').files[0];
+        if (avatarFile) formData.append('avatar', avatarFile);
+        if (coverFile) formData.append('coverImage', coverFile);
+        console.log('Form Data:', formData);
+        
+        try {
+            const response = await fetch('http://localhost:8000/api/v1/users/register', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+            console.log(result);
+            
+
+            if (response.ok) {
+                alert('Account created successfully!');
+                form.reset();
+                coverPreview.style.display = 'none';
+                avatarPreview.style.display = 'none';
+                document.querySelector('.cover-upload i').style.display = 'block';
+                document.querySelector('.cover-upload span').style.display = 'block';
+                document.querySelector('.avatar-upload i').style.display = 'block';
+                document.querySelector('.avatar-upload span').style.display = 'block';
+            } else {
+                alert(result.message || 'Registration failed.');
+            }
+        } catch (err) {
+            console.error('Error submitting form:', err);
+            // alert('Something went wrong. Please try again.');
+        }
+    }
+            });
+            
+            // Real-time password match validation
+            confirmPassword.addEventListener('input', function() {
+                if (this.value && password.value !== this.value) {
+                    document.getElementById('confirm-error').style.display = 'block';
+                } else {
+                    document.getElementById('confirm-error').style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
